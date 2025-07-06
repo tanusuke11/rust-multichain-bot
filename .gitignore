@@ -1,0 +1,99 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
+# Debug symbols
+*.dSYM/
+
+# IDE files
+# .vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Configuration files with sensitive data
+config.toml
+config.json
+secrets.toml
+secrets.json
+
+# API keys and wallet files
+*.key
+*.pem
+wallet.json
+keystore/
+private_keys/
+
+# Build artifacts
+dist/
+build/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Coverage reports
+coverage/
+*.profraw
+*.profdata
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Node modules (if using any JS/TS tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache directories
+.cache/
+cache/
+
+# Documentation build
+doc/
+docs/_build/
+
+# Test artifacts
+test-results/
+test-output/
+
+# Blockchain specific
+# RPC endpoints configuration
+rpc_config.json
+# Wallet addresses
+addresses.json
+# Transaction history
+transactions.json
+# Network specific configs
+mainnet.json
+testnet.json
