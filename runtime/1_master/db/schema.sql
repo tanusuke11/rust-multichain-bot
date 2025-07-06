@@ -1,0 +1,1 @@
+-- SQLite schema for multichain bot database

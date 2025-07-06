@@ -1,0 +1,1 @@
+// Chain trait + module integration

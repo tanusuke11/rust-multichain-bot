@@ -1,0 +1,5 @@
+{
+  "name": "multichain-bot-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for multichain bot (Astro x React x Tailwind CSS x shadcn/ui)"
+}
