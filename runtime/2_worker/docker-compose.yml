@@ -1,1 +1,16 @@
 # Docker Compose for test and verification
+
+version: "3.8"
+
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+    command: ["cargo", "run"]
+    environment:
+      - RUST_LOG=info
+    ports:
+      - "8080:8080"
