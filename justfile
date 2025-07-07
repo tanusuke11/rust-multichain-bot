@@ -22,4 +22,4 @@ clean:
 
 # Start Rust worker bot using Docker
 worker:
-    cd runtime/2_worker && sudo docker-compose up --build
+    cd runtime/worker && sudo docker-compose up --build
