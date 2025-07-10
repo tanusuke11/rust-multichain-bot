@@ -1,17 +1,17 @@
-# Use the official Rust image as a base
-FROM rust:1.70
+# シンプルなRustコンテナで確実に動作させる
+FROM rust:1.85.0
 
-# Set the working directory
+# 作業ディレクトリを設定
 WORKDIR /app
 
-# Remove the dummy source files
-RUN rm -rf src
+# ソースコードと設定をコピー
+COPY Cargo.toml .
+COPY src ./src
+COPY config.toml .
+COPY .env .
 
-# Copy the actual source code
-COPY . .
-
-# Build the application
+# ビルド（キャッシュを使用）
 RUN cargo build --release
 
-# Set the entry point
-CMD ["./target/release/worker"]
+# 最後のレイヤーでcargoを実行（ソースが変更された場合はこちらが優先される）
+CMD ["cargo", "run", "--release"]

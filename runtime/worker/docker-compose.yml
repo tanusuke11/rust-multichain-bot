@@ -1,15 +1,17 @@
 # Docker Compose for test and verification
 
-version: "3.8"
+version: "3.9"
+
+# 必須: ボリューム設定を明示的に空に定義して競合を防ぐ
+volumes: {}
 
 services:
   worker:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - ./src:/app/src
-    command: ["cargo", "run"]
+    container_name: rust_worker
+    working_dir: /app
     environment:
       - RUST_LOG=info
     ports:

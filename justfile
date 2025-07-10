@@ -20,6 +20,6 @@ dev:
 clean:
     echo "Cleaning build artifacts..."
 
-# Start Rust worker bot using Docker
+# Start Rust worker bot using Docker (clean build with volume purge to avoid caching issues)
 worker:
-    cd runtime/worker && sudo docker-compose up --build
+    cd runtime/worker && docker-compose down -v && docker-compose up --build
