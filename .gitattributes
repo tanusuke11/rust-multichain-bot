@@ -1,0 +1,32 @@
+# Prevent .env files from being used for Copilot training
+# These files contain sensitive environment variables and API keys
+.env linguist-generated=true
+**/.env linguist-generated=true
+.env.* linguist-generated=true
+**/.env.* linguist-generated=true
+
+# Allow .env.example files for Copilot training (these contain no sensitive data)
+.env.example -linguist-generated
+**/.env.example -linguist-generated
+
+# Prevent .archive directory from being used for training
+.archive/ linguist-generated=true
+.archive/** linguist-generated=true
+
+# Prevent other sensitive files from being used for training
+*.key linguist-generated=true
+*.pem linguist-generated=true
+wallet.json linguist-generated=true
+secrets.toml linguist-generated=true
+secrets.json linguist-generated=true
+keystore/ linguist-generated=true
+keystore/** linguist-generated=true
+private_keys/ linguist-generated=true
+private_keys/** linguist-generated=true
+
+# Blockchain specific sensitive files
+rpc_config.json linguist-generated=true
+addresses.json linguist-generated=true
+transactions.json linguist-generated=true
+mainnet.json linguist-generated=true
+testnet.json linguist-generated=true

@@ -1,0 +1,4 @@
+log_level = "info"
+strategy_type = "atomic_arb"
+chain_type = "hyperevm"
+environment_type = "local"

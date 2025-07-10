@@ -17,4 +17,5 @@ fn main() {
     context.strategy.execute();
 
     println!("Worker bot execution completed.");
+
 }

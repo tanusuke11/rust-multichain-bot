@@ -1,8 +1,10 @@
 # Rust
-/target/
+**/target/
+!**/target/.gitkeep
 **/*.rs.bk
 *.pdb
-Cargo.lock
+# Cargo.lock should be committed for applications, ignored for libraries
+# Cargo.lock
 
 # Debug symbols
 *.dSYM/
@@ -33,8 +35,6 @@ logs/
 !.env.example
 
 # Configuration files with sensitive data
-config.toml
-config.json
 secrets.toml
 secrets.json
 
@@ -97,3 +97,5 @@ transactions.json
 # Network specific configs
 mainnet.json
 testnet.json
+
+.archive/

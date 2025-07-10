@@ -1,2 +1,0 @@
-# Exclude all .env files from Copilot indexing
-**/.env*
