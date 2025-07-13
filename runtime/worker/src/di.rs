@@ -5,7 +5,7 @@ use std::path::Path;
 use std::sync::Arc;
 use toml::Value;
 use worker::strategy::{AtomicArbStrategy, LiquidatorStrategy, Strategy};
-use worker::chain::{EthereumChain, HyperEVMChain, Chain};
+use worker::chain::{Chain, EthereumChain, HyperEVMChain};
 use worker::env::{local::LocalEnvironment, vps::VPSEnvironment, Environment};
 
 
@@ -20,12 +20,6 @@ impl AppContext {
     pub fn new() -> Self {
         let config = Config::from_file("config.toml");
 
-        let strategy: Arc<dyn Strategy> = match config.strategy_type.as_str() {
-            "atomic_arb" => Arc::new(AtomicArbStrategy::new()),
-            "liquidator" => Arc::new(LiquidatorStrategy::new()),
-            _ => Arc::new(AtomicArbStrategy::new()), // fallback
-        };
-
         let chain: Arc<dyn Chain> = match config.chain_type.as_str() {
             "ethereum" => Arc::new(EthereumChain::new()),
             "hyperevm" => Arc::new(HyperEVMChain::new()),
@@ -36,6 +30,12 @@ impl AppContext {
             "local" => Arc::new(LocalEnvironment::new()),
             "vps" => Arc::new(VPSEnvironment::new()),
             _ => Arc::new(LocalEnvironment::new()), // fallback
+        };
+
+        let strategy: Arc<dyn Strategy> = match config.strategy_type.as_str() {
+            "atomic_arb" => Arc::new(AtomicArbStrategy::new(chain.clone(), environment.clone())),
+            "liquidator" => Arc::new(LiquidatorStrategy::new(chain.clone(), environment.clone())),
+            _ => Arc::new(AtomicArbStrategy::new(chain.clone(), environment.clone())), // fallback
         };
 
         AppContext {

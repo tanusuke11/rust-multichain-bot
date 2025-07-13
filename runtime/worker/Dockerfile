@@ -14,4 +14,4 @@ COPY .env .
 RUN cargo build --release
 
 # 最後のレイヤーでcargoを実行（ソースが変更された場合はこちらが優先される）
-CMD ["cargo", "run", "--release"]
+CMD ["cargo", "run", "--release", "--bin", "worker"]

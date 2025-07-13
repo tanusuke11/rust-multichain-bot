@@ -2,9 +2,11 @@ use reqwest::header::{HeaderMap, HeaderValue, CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::error::Error;
+use std::sync::Arc;
 use dotenv::dotenv;
 
-use crate::module::lifi::find_routes::{LifiRoute, LifiRouteResponse};
+use crate::module::lifi::find_routes::LifiRouteResponse;
+use crate::chain::Chain;
 
 /// トランザクション応答の構造体（実際のAPIレスポンスに合わせて修正）
 #[derive(Deserialize, Serialize, Debug)]
@@ -43,8 +45,12 @@ pub struct TransactionRequest {
     pub max_priority_fee_per_gas: Option<String>,
 }
 
-/// ルートIDを指定してトランザクションを構築する関数
-pub async fn build_transaction(response: &LifiRouteResponse, route_id: Option<&str>) -> Result<TransactionResponse, Box<dyn Error>> {
+/// ルートIDを指定してトランザクションを構築する関数（DI対応）
+pub async fn build_transaction(
+    response: &LifiRouteResponse, 
+    route_id: Option<&str>,
+    chain: Arc<dyn Chain>
+) -> Result<TransactionResponse, Box<dyn Error>> {
     // .envファイルを読み込む
     dotenv().ok();
     
@@ -72,15 +78,17 @@ pub async fn build_transaction(response: &LifiRouteResponse, route_id: Option<&s
     let mut step = route.steps[0].clone();
     
     // fromAddressとtoAddressを設定
-    // 一般的にはウォレットアドレスが必要
+    // DIから注入されたChainを使用してEVMアドレスを取得
+    let wallet_address = chain.get_primary_wallet_address()?;
+    let wallet_address_str = format!("{:#x}", wallet_address);
+    
     if step.action.from_address.is_none() {
-        // テスト用の有効なウォレットアドレスを設定
-        step.action.from_address = Some("0x3f17f1962B36e491b30A40b2405849e597Ba5FB5".to_string());
+        step.action.from_address = Some(wallet_address_str.clone());
     }
     
     if step.action.to_address.is_none() {
         // トークンの送信先（通常は同じアドレス）
-        step.action.to_address = Some("0x3f17f1962B36e491b30A40b2405849e597Ba5FB5".to_string());
+        step.action.to_address = Some(wallet_address_str);
     }
     
     // ヘッダーを設定
@@ -122,7 +130,10 @@ pub async fn build_transaction(response: &LifiRouteResponse, route_id: Option<&s
     }
 }
 
-/// 最適なルートのトランザクションを構築する関数（最初のルートを使用）
-pub async fn build_best_route_transaction(response: &LifiRouteResponse) -> Result<TransactionResponse, Box<dyn Error>> {
-    build_transaction(response, None).await
+/// 最適なルートのトランザクションを構築する関数（最初のルートを使用）（DI対応）
+pub async fn build_best_route_transaction(
+    response: &LifiRouteResponse,
+    chain: Arc<dyn Chain>
+) -> Result<TransactionResponse, Box<dyn Error>> {
+    build_transaction(response, None, chain).await
 }
