@@ -1,75 +1,188 @@
 # Rust Multichain Bot
 
-A sophisticated multichain arbitrage and liquidation bot system built with Rust, TypeScript, and modern web technologies.
+A sophisticated multichain arbitrage and liquidation bot system built with Rust, TypeScript, and Li.Fi API integration for cross-chain routing and atomic arbitrage strategies.
 
-## Project Structure
+## 🏗️ Project Architecture
 
-This project follows a modular architecture with clear separation of concerns:
+This project follows a modular microservices architecture with dependency injection patterns:
 
-### Frontend (`frontend/`)
-- UI built with Astro, React, Tailwind CSS, and shadcn/ui
-- Modern, responsive interface for bot management and monitoring
+### 🖥️ Frontend (`frontend/`)
+- Modern web interface for bot management and monitoring
+- Built with modern web technologies
 
-### Runtime Components (`runtime/`)
+### ⚡ Runtime Components (`runtime/`)
 
-#### 1. Master API (`1_master/`)
-- TypeScript-based API server with Express
-- Database management with SQLite (upgradeable to cloud DB)
-- HTTP routing and business logic layer
+#### Master Service (`master/`)
+- **TypeScript-based coordination service**
+- PostgreSQL database with schema migrations
+- API server for orchestrating bot operations
+- Database schema: `db/schema.sql`, `db/migrations/`
 
-#### 2. Worker Bot (`2_worker/`)
-- Rust-based strategy execution engine
-- Tokio async runtime for high-performance trading
-- Modular chain integrations (Uniswap, Hyperliquid, etc.)
+#### Worker Bot (`worker/`) ⭐
+- **Core Rust arbitrage engine with Li.Fi integration**
+- Dependency injection architecture for modular components
+- Chain abstraction layer (Ethereum, HyperEVM)
+- Strategy implementations (Atomic Arbitrage, Liquidator)
+- Environment management (Local, VPS)
+- Docker containerized with `--bin worker` execution
 
-#### 3. Proxy (`3_proxy/`)
-- Cloudflare Workers-based API proxy
-- Handles external API requests with token transparency
-- CORS support for frontend integration
+#### Proxy Service (`proxy/`)
+- **Cloudflare Workers-based API proxy**
+- Handles external API requests and CORS
+- Token transparency for frontend integration
 
-#### 4. Seeker (`4_seeker/`)
-- ML analysis and data collection module
-- Rust implementation with Python integration via pyo3
+#### Seeker Service (`seeker/`)
+- **Market analysis and data collection**
+- Rust-based scraper and analyzer modules
 - Jupyter notebooks for research and analysis
 
-### Core Libraries
+### 🔗 Core Architecture Patterns
 
-#### Chain Abstraction (`@chain/`)
+#### Chain Abstraction (`src/chain/`)
 - Unified interface for different blockchain networks
-- EVM and HyperEVM support
-- RPC management and contract interaction
+- Secure EVM address derivation with k256 cryptography
+- Support for Ethereum and HyperEVM chains
+- Primary wallet address management
 
-#### Strategy Layer (`@strategy/`)
-- Atomic arbitrage implementation
+#### Strategy Layer (`src/strategy/`)
+- Dependency injection pattern with Arc<dyn Trait>
+- Atomic arbitrage with Li.Fi route optimization
 - Liquidation bot strategies
-- Common trading utilities
+- Modular strategy composition
 
-#### Environment Management (`@env/`)
-- Local simulation environment
-- Cloud deployment configurations
-- Environment switching logic
+#### Environment Management (`src/env/`)
+- Local development and VPS production environments
+- Configuration abstraction
+- Environment-specific settings
 
-### Smart Contracts (`web3/`)
-- Solidity and Move contract definitions
-- Uniswap and Hyperliquid integrations
+#### Li.Fi Integration (`src/module/lifi/`)
+- Cross-chain route discovery and optimization
+- Transaction building with proper address injection
+- Error handling and debugging capabilities
 
-## Getting Started
+### 📁 Smart Contracts (`onchain/`)
+- Contract definitions for Uniswap and Hyperliquid
+- Integration templates and examples
 
-1. Clone the repository
-2. Install dependencies for each component
-3. Configure environment variables
-4. Use `just dev` to start the development environment
+## 🚀 Getting Started
 
-## Commands
+### Prerequisites
+- **Rust 1.85.0+** with cargo
+- **Node.js 18+** for TypeScript components
+- **Docker** for containerization
+- **PostgreSQL** for database (master service)
+
+### Development Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/tanusuke11/rust-multichain-bot.git
+   cd rust-multichain-bot
+   ```
+
+2. **Environment Configuration**
+   ```bash
+   # Copy example environment files
+   cp .env.example .env
+   # Configure your API keys and settings
+   ```
+
+3. **Build and Run**
+   ```bash
+   # Build all components
+   just build
+   
+   # Run worker bot locally
+   just worker
+   
+   # Start development environment
+   just dev
+   ```
+
+### 🐋 Docker Deployment
+
+Worker bot is containerized for production deployment:
+
+```bash
+# Build Docker image
+docker build -t rust-multichain-worker runtime/worker/
+
+# Run container
+docker run --env-file .env rust-multichain-worker
+```
+
+## 🔧 Key Technologies
+
+- **Rust**: Core arbitrage logic with async/await patterns
+- **Li.Fi API**: Cross-chain routing and transaction building
+- **alloy-primitives**: EVM address handling and cryptography
+- **k256**: Secure elliptic curve operations
+- **TypeScript**: Master service coordination
+- **PostgreSQL**: Transaction tracking and state management
+- **Docker**: Containerized deployment
+
+## 📊 Architecture Highlights
+
+### Dependency Injection Pattern
+- Clean separation of concerns with Arc<dyn Trait> patterns
+- Testable and modular component architecture
+- Constructor-based dependency injection
+
+### Security Features
+- Secure EVM private key handling with k256
+- Environment variable protection (.copilotignore, .gitattributes)
+- No sensitive data exposure in code
+
+### Li.Fi Integration
+- ✅ Route discovery and parsing
+- ✅ Cross-chain transaction building
+- ✅ Error handling and debugging
+- ✅ Address injection via DI
+
+## 📋 Available Commands
 
 Use the provided Justfile for common operations:
 
-- `just build` - Build all components
-- `just test` - Run tests
-- `just dev` - Start development environment
-- `just deploy` - Deploy to production
-- `just clean` - Clean build artifacts
+```bash
+just build        # Build all components
+just test         # Run test suites
+just worker       # Run worker bot locally
+just dev          # Start development environment
+just deploy       # Deploy to production
+just clean        # Clean build artifacts
+```
 
-## License
+## 📁 Project Structure
+
+```
+runtime/
+├── master/          # TypeScript coordination service
+│   ├── src/         # API controllers and services
+│   └── db/          # Database schema and migrations
+├── worker/          # Rust arbitrage bot ⭐
+│   ├── src/
+│   │   ├── chain/   # Blockchain abstraction
+│   │   ├── strategy/ # Trading strategies
+│   │   ├── module/  # Li.Fi integration
+│   │   └── env/     # Environment management
+│   └── Dockerfile   # Container configuration
+├── proxy/           # Cloudflare Workers proxy
+└── seeker/          # Market analysis service
+
+onchain/             # Smart contract definitions
+frontend/            # Web interface
+scripts/             # Automation scripts
+types/               # Shared type definitions
+```
+
+## 🔒 Security Notice
+
+This project contains sensitive API keys and blockchain secrets. Ensure proper:
+- Environment variable management
+- Private key security
+- API key rotation
+- Network security for production deployments
+
+## 📝 License
 
 [Add your license here]
