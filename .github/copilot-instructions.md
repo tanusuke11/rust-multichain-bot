@@ -59,6 +59,35 @@ runtime/
 3. **Test API integrations** in isolated environments
 4. **Follow Rust best practices** for error handling and async programming
 
+## 📤 Agent Response Guidelines
+
+When completing tasks, provide concise summaries:
+
+### ✅ Task Completion Format
+
+```
+## ✅ [Task Name] Complete
+
+### Changes Made:
+- Brief bullet point of key changes
+- Focus on functional outcomes, not technical details
+
+### Status:
+- ✅ Builds successfully
+- ✅ Tests pass
+- ✅ Ready for next task
+
+### Next Steps (if applicable):
+- Short recommendation for follow-up work
+```
+
+### 🚫 Avoid in Responses:
+
+- Verbose technical explanations unless specifically requested
+- Repetitive status updates during execution
+- Excessive code block outputs
+- Step-by-step process descriptions
+
 ## 🚀 Li.Fi Integration Status
 
 ✅ Route discovery and parsing working correctly  
